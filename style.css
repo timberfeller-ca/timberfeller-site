@@ -63,6 +63,8 @@ header.site nav a { color: #fff; }
 
 .fine { font-size: 15px; color: var(--muted); }
 .desktop-number { display: none; font-size: 22px; font-weight: 700; color: var(--green-dark); }
+.desktop-qr { display: none; align-items: center; gap: 16px; margin: 16px 0 14px; max-width: 420px; font-size: 16px; }
+.desktop-qr img { width: 140px; height: 140px; background: #fff; padding: 6px; border-radius: 8px; flex: none; }
 
 section { padding: 36px 0; }
 section h2 { font-size: 28px; margin: 0 0 14px; color: var(--green-dark); }
@@ -99,6 +101,7 @@ footer { padding: 22px 0 40px; font-size: 15px; color: var(--muted); }
 
 @media (hover: hover) and (pointer: fine) {
   .desktop-number { display: block; margin-top: 10px; }
+  .desktop-qr { display: flex; }
 }
 
 @media (max-width: 720px) {
