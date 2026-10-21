@@ -113,5 +113,7 @@ footer { padding: 22px 0 40px; font-size: 15px; color: var(--muted); }
   .work { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .gallery { grid-template-columns: minmax(0, 1fr); }
   .areas { columns: 1; }
-  header.site nav { display: none; }
+  header.site .wrap { flex-wrap: wrap; row-gap: 6px; }
+  header.site nav { flex-basis: 100%; box-sizing: border-box; padding-left: 78px; margin-left: 0; font-size: 17px; }
+  header.site .nav-text { display: none; }
 }
