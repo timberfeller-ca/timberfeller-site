@@ -150,7 +150,8 @@
       const btn = $('send');
       if (viewMode || !pins.length) { btn.setAttribute('aria-disabled', 'true'); btn.href = '#'; return; }
       const lines = pins.map((p, i) => `${i + 1}) ${p.note || 'tree'}`).join('\n');
-      const body = `Hi Trevor, here are the trees I'd like down${address ? ' at ' + address : ''}:\n${lines}\nMap:\n${viewLink()}`;
+      // The link sits mid-message: an iPhone splits a link at the start or end into its own text.
+      const body = `Hi Trevor, here are the trees I'd like down${address ? ' at ' + address : ''}:\n${lines}\nMap: ${viewLink()} \nThanks, I'll wait to hear back.`;
       btn.href = `sms:+1${number}?&body=${encodeURIComponent(body)}`;
       btn.setAttribute('aria-disabled', 'false');
     }
