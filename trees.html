@@ -90,11 +90,11 @@
 
     const map = L.map('map', { zoomControl: true, maxZoom: 20 }).setView([45.0, -76.5], 7);
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 20, maxNativeZoom: 19,
+      maxZoom: 20, maxNativeZoom: 18,
       attribution: 'Imagery &copy; Esri, Maxar, Earthstar Geographics'
     }).addTo(map);
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 20, maxNativeZoom: 19, opacity: 0.6
+      maxZoom: 20, maxNativeZoom: 18, opacity: 0.6
     }).addTo(map);
     const layer = L.layerGroup().addTo(map);
 
@@ -208,7 +208,7 @@
       $('send').hidden = true;
       $('hint').textContent = 'Satellite imagery can be a few years old; confirm on the site visit.';
       render();
-      if (pins.length) map.fitBounds(L.latLngBounds(pins.map((p) => [p.lat, p.lng])).pad(0.6), { maxZoom: 19 });
+      if (pins.length) map.fitBounds(L.latLngBounds(pins.map((p) => [p.lat, p.lng])).pad(0.6), { maxZoom: 18 });
     } else {
       map.on('click', (e) => {
         if (pins.length >= 12) { say('That is a lot of trees! Send these and text Trevor about the rest.'); return; }
