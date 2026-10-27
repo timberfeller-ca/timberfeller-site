@@ -82,7 +82,8 @@
      */
     const DEFAULT_NUMBER = '6132094148';
     const params = new URLSearchParams(location.search);
-    const viewMode = params.get('v') === '1';
+    const hashPins = /^#-?\d/.test(location.hash) ? readHashPins(location.hash) : [];
+    const viewMode = params.get('v') === '1' || hashPins.length > 0;
     const number = (params.get('n') || DEFAULT_NUMBER).replace(/\D/g, '').slice(-10);
     let address = params.get('a') || '';
     let pins = [];
@@ -122,7 +123,7 @@
         }
       });
       $('pins').innerHTML = pins.map((p, i) => viewMode
-        ? `<li><span class="num">${i + 1}</span><span class="note">${esc(p.note || '(no note)')}</span></li>`
+        ? `<li><span class="num">${i + 1}</span><span class="note">${esc(p.note || 'See note ' + (i + 1) + ' in the text')}</span></li>`
         : `<li><span class="num">${i + 1}</span><input data-i="${i}" value="${esc(p.note)}" placeholder="Note, e.g. big ash leaning to garage" maxlength="80" aria-label="Note for tree ${i + 1}"><button type="button" data-del="${i}">Remove</button></li>`
       ).join('');
       updateSend();
@@ -133,13 +134,15 @@
       return pins.map((p) => `${p.lat.toFixed(6)},${p.lng.toFixed(6)},${p.note.replace(/[|]/g, '/')}`).join('|');
     }
 
-    /** Builds the read-only view link Trevor opens from the text. */
+    /**
+     * Builds the read-only view link Trevor opens from the text. It uses only
+     * digits, dots, minus signs and underscores after the "#", because the iPhone
+     * drops links with "?", "&" or "%" from an sms: body. The notes travel in the
+     * text itself, not in the link.
+     */
     function viewLink() {
-      const u = new URL(location.href.split('?')[0].split('#')[0]);
-      u.searchParams.set('v', '1');
-      if (address) u.searchParams.set('a', address);
-      u.searchParams.set('p', encodePins());
-      return u.toString();
+      const base = location.origin + location.pathname;
+      return base + '#' + pins.map((p) => `${p.lat.toFixed(5)}_${p.lng.toFixed(5)}`).join('_');
     }
 
     /** Points the Send button at a text to Timber with the notes and the map link. */
@@ -147,7 +150,7 @@
       const btn = $('send');
       if (viewMode || !pins.length) { btn.setAttribute('aria-disabled', 'true'); btn.href = '#'; return; }
       const lines = pins.map((p, i) => `${i + 1}) ${p.note || 'tree'}`).join('\n');
-      const body = `Hi Trevor, here are the trees I'd like down${address ? ' at ' + address : ''}:\n${lines}\nMap: ${viewLink()}`;
+      const body = `Hi Trevor, here are the trees I'd like down${address ? ' at ' + address : ''}:\n${lines}\nMap:\n${viewLink()}`;
       btn.href = `sms:+1${number}?&body=${encodeURIComponent(body)}`;
       btn.setAttribute('aria-disabled', 'false');
     }
@@ -167,12 +170,22 @@
       }
     }
 
-    /** Reads pins from the p parameter. */
+    /** Reads pins from the p parameter ("lat,lng,note|...", older links). */
     function readPins(s) {
       return (s || '').split('|').map((part) => {
         const [lat, lng, ...note] = part.split(',');
         return { lat: +lat, lng: +lng, note: note.join(',') };
       }).filter((p) => isFinite(p.lat) && isFinite(p.lng) && p.lat && p.lng);
+    }
+
+    /** Reads pins from the link's "#lat_lng_lat_lng" part; notes are in the text. */
+    function readHashPins(h) {
+      const n = (h || '').replace(/^#/, '').split('_').map(Number);
+      const out = [];
+      for (let i = 0; i + 1 < n.length; i += 2) {
+        if (isFinite(n[i]) && isFinite(n[i + 1]) && n[i] && n[i + 1]) out.push({ lat: n[i], lng: n[i + 1], note: '' });
+      }
+      return out;
     }
 
     $('pins').addEventListener('input', (e) => {
@@ -187,9 +200,9 @@
 
     $('addr').value = address;
     if (viewMode) {
-      pins = readPins(params.get('p'));
+      pins = hashPins.length ? hashPins : readPins(params.get('p'));
       $('title').textContent = 'Trees marked' + (address ? ': ' + address : '');
-      $('lead').textContent = `${pins.length} tree${pins.length === 1 ? '' : 's'} marked by the customer.`;
+      $('lead').textContent = `${pins.length} tree${pins.length === 1 ? '' : 's'} marked by the customer. The numbers match the notes in their text.`;
       $('find').hidden = true;
       $('send').hidden = true;
       $('hint').textContent = 'Satellite imagery can be a few years old; confirm on the site visit.';
