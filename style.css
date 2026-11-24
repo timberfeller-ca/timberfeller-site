@@ -141,3 +141,4 @@ footer { padding: 22px 0 40px; font-size: 15px; color: var(--muted); }
 .review blockquote { margin: 0; }
 .review blockquote p { margin: 0; }
 .review figcaption { font-size: 15px; font-weight: 700; color: var(--green-dark); margin-top: auto; }
+.review .full-review { font-size: 15px; font-weight: 600; }
