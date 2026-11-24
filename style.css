@@ -127,3 +127,17 @@ footer { padding: 22px 0 40px; font-size: 15px; color: var(--muted); }
   header.site nav { flex-basis: 100%; box-sizing: border-box; padding-left: 78px; margin-left: 0; font-size: 17px; }
   header.site .nav-text { display: none; }
 }
+
+/* Google rating badge and reviews (task 463) */
+.stars { color: #f2b705; letter-spacing: 0.06em; }
+.rating { display: inline-flex; align-items: center; gap: 6px; margin: 0 0 14px; padding: 6px 14px; background: #fff; border: 1px solid #cfdcd2; border-radius: 999px; text-decoration: none; color: var(--text); font-size: 17px; }
+.rating .stars { font-size: 18px; }
+.rating .rating-count { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+.rating:hover, .rating:focus { border-color: var(--green); }
+#reviews { scroll-margin-top: 12px; }
+.rating-summary { font-size: 20px; margin: 0 0 16px; }
+.reviews { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+.review { margin: 0; background: var(--green-light); border-radius: var(--radius); padding: 16px 18px; display: flex; flex-direction: column; gap: 8px; }
+.review blockquote { margin: 0; }
+.review blockquote p { margin: 0; }
+.review figcaption { font-size: 15px; font-weight: 700; color: var(--green-dark); margin-top: auto; }
